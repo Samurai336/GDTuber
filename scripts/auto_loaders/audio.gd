@@ -19,14 +19,29 @@ var input_device: String
 var mag_throbber_value:= 0.0
 var _microphone_reset_timer := Timer.new()
 
+var _current_microphone_device: AudioStreamPlayer = null
+
 func _ready() -> void:
     bus_index = AudioServer.get_bus_index("Record")
     amplifier_effect = AudioServer.get_bus_effect(bus_index, 1)
+
+    create_microphone_device()
 
     _microphone_reset_timer.wait_time=AUDIO_REST_TIMEOUT
     _microphone_reset_timer.timeout.connect(self.audio_reset)
     _microphone_reset_timer.autostart=true
     add_child(_microphone_reset_timer)
+
+func create_microphone_device():
+    var audio_player = AudioStreamPlayer.new()
+    var microphone = AudioStreamMicrophone.new()
+
+    audio_player.stream = microphone 
+    audio_player.autoplay = true    
+    add_child(audio_player)
+    _current_microphone_device = audio_player
+    await get_tree().create_timer(0.25).timeout
+    audio_player.playing=false
 
 func get_audio_devices() -> PackedStringArray: 
     return  AudioServer.get_input_device_list()
@@ -68,20 +83,14 @@ func set_input_gain(new_input_gain: float) -> void:
     _update_amplifier(new_input_gain)
     input_gain = new_input_gain
 
-
 func _update_amplifier(new_input_gain: float):
     if new_input_gain <= -10.0 || new_input_gain >= 24.1:
         return
     if amplifier_effect.volume_db != new_input_gain:
         amplifier_effect.volume_db = new_input_gain
 
-
 func audio_reset() -> void:
     print_debug("Resetting audio device")
-    var orig_device = AudioServer.input_device
-    var devices = AudioServer.get_input_device_list()
-    var index = devices.find(orig_device)
-    var rand_index = (index + randi_range(1, devices.size() - 1)) % devices.size()
-    AudioServer.input_device = devices[rand_index]
-    await get_tree().create_timer(0.2).timeout
-    AudioServer.input_device = orig_device
+    _current_microphone_device.playing=true
+    await get_tree().create_timer(0.25).timeout
+    _current_microphone_device.playing=false
