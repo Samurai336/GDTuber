@@ -89,6 +89,8 @@ func _update_amplifier(new_input_gain: float):
 
 func audio_reset() -> void:
     print_debug("Resetting audio device")
+    # based on this from a bug report 
+    # https://github.com/godotengine/godot/issues/80173#issuecomment-2119148302
     _current_microphone_device.playing=false
     await get_tree().create_timer(0.25).timeout
     _current_microphone_device.playing=true
