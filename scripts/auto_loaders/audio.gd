@@ -35,13 +35,11 @@ func _ready() -> void:
 func create_microphone_device():
     var audio_player = AudioStreamPlayer.new()
     var microphone = AudioStreamMicrophone.new()
-
     audio_player.stream = microphone 
-    audio_player.autoplay = true    
+    audio_player.autoplay = true
     add_child(audio_player)
+    audio_player.stream_paused=true # if you don't set this to true you can monitor your self. 
     _current_microphone_device = audio_player
-    await get_tree().create_timer(0.25).timeout
-    audio_player.playing=false
 
 func get_audio_devices() -> PackedStringArray: 
     return  AudioServer.get_input_device_list()
@@ -91,6 +89,7 @@ func _update_amplifier(new_input_gain: float):
 
 func audio_reset() -> void:
     print_debug("Resetting audio device")
-    _current_microphone_device.playing=true
-    await get_tree().create_timer(0.25).timeout
     _current_microphone_device.playing=false
+    await get_tree().create_timer(0.25).timeout
+    _current_microphone_device.playing=true
+    _current_microphone_device.stream_paused=true # if you don't set this to true you can monitor your self. 
