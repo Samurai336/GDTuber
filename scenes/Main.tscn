@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bjlwevofrob1" path="res://scripts/Main.gd" id="1_6oykm"]
 [ext_resource type="Script" uid="uid://djq7cnr1q3go0" path="res://scripts/screen_object/controls/LineEditReset.gd" id="2_0ym8f"]
-[ext_resource type="PackedScene" uid="uid://gqowj0i8nx5i" path="res://scenes/main_menu_control.tscn" id="2_rvslj"]
+[ext_resource type="PackedScene" uid="uid://ch3v6qt5663" path="res://scenes/main_menu_control.tscn" id="2_rvslj"]
 [ext_resource type="Theme" uid="uid://d18y4voshb0um" path="res://Resources/Menu Theme.tres" id="3_5cu1w"]
 [ext_resource type="Script" uid="uid://6dijgfptswv4" path="res://scripts/screen_object/gizmo.gd" id="4_7g88q"]
 [ext_resource type="Texture2D" uid="uid://c5fl4pf7cxwvc" path="res://Assets/gizmo.png" id="5_lmu52"]
@@ -527,10 +527,14 @@ autostart = true
 wait_time = 60.0
 autostart = true
 
-[node name="MainMenuControl" parent="." instance=ExtResource("2_rvslj")]
-layout_mode = 1
-offset_left = 293.0
-offset_right = 593.0
+[node name="MenuControlPopupWindow" type="Window" parent="."]
+unique_name_in_owner = true
+oversampling_override = 1.0
+initial_position = 2
+size = Vector2i(300, 720)
+
+[node name="MainMenuControl" parent="MenuControlPopupWindow" instance=ExtResource("2_rvslj")]
+unique_name_in_owner = true
 
 [connection signal="text_submitted" from="Menu/PanelContainer/MainMenu/TitleEdit" to="." method="_set_profile_name"]
 [connection signal="value_changed" from="Menu/PanelContainer/MainMenu/HBoxContainer/ThresholdSlider" to="." method="_on_v_slider_drag_ended"]
@@ -556,3 +560,4 @@ offset_right = 593.0
 [connection signal="file_selected" from="JSONLoadDialog" to="." method="_load_data"]
 [connection signal="timeout" from="AutosaveTimer" to="." method="_on_autosave_timer_timeout"]
 [connection signal="timeout" from="AudioResetTimer" to="." method="_on_audio_reset_timer_timeout"]
+[connection signal="close_requested" from="MenuControlPopupWindow" to="." method="_pop_menu_into_external_window"]

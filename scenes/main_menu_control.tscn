@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://gqowj0i8nx5i"]
+[gd_scene load_steps=8 format=3 uid="uid://ch3v6qt5663"]
 
 [ext_resource type="Script" uid="uid://djq7cnr1q3go0" path="res://scripts/screen_object/controls/LineEditReset.gd" id="1_hl1yy"]
 [ext_resource type="Script" uid="uid://2i34smgvm1yd" path="res://scripts/menu_main_control.gd" id="1_jjfu5"]
@@ -147,6 +147,10 @@ text = "MAIN_SYSTEM_SETTINGS_LABEL"
 [node name="CloseButton" type="Button" parent="MainMenu"]
 layout_mode = 2
 text = "MAIN_HIDE_MENU_BUTTON"
+
+[node name="PopOutToggle" type="Button" parent="MainMenu"]
+layout_mode = 2
+text = "Pop Out"
 
 [node name="SettingsMenu" type="Control" parent="."]
 unique_name_in_owner = true
@@ -457,5 +461,6 @@ offset_right = 62.5
 offset_bottom = 62.5
 texture_normal = ExtResource("4_pk1al")
 
+[connection signal="pressed" from="MainMenu/PopOutToggle" to="." method="_on_pop_out_toggle_pressed"]
 [connection signal="button_down" from="Menu/Gizmo/Button" to="Menu/Gizmo" method="drag"]
 [connection signal="button_up" from="Menu/Gizmo/Button" to="Menu/Gizmo" method="dragnt"]

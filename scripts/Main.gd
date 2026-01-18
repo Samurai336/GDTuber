@@ -33,6 +33,10 @@ var is_talking := false:
 					screen_object.is_talking = value
 		is_talking = value
 
+# NewMenuControl
+@onready var main_menu_control: MainMenuControl = %MainMenuControl
+@onready var main_menu_control_window: Window = %MenuControlPopupWindow
+
 # Window Management
 @onready var titleedit: LineEdit = %TitleEdit
 @onready var profilename: String = "GDTuber Avatar"
@@ -87,6 +91,14 @@ func _ready():
 	file_dialog.file_selected.connect(_load_image)
 
 	_load_system_data()
+
+	# Find more elegant way to set sane window position
+	# may need to hold were it was too in memory since node 
+	# does nto remember
+
+	_set_pop_up_window_position()
+	
+	main_menu_control.pop_out_requested.connect(_pop_menu_into_external_window)
 
 ### Process
 func _process(_delta):
@@ -299,3 +311,21 @@ func _on_max_fps_spinbox_value_changed(value: float) -> void:
 	fps_cap_value = int(value)
 	if int(value) != Engine.get_max_fps():
 		Engine.set_max_fps(int(value))
+
+func _pop_menu_into_external_window():
+	if main_menu_control_window.visible:
+		main_menu_control.reparent(self)
+		main_menu_control.position.x = 293
+		main_menu_control_window.hide()
+		return 
+
+	main_menu_control.reparent(main_menu_control_window)
+	main_menu_control.position.x=0
+	main_menu_control_window.show()
+	_set_pop_up_window_position()
+	
+func _set_pop_up_window_position():
+	var pop_up_position =  DisplayServer.window_get_position()
+	pop_up_position.x -= 300
+	main_menu_control_window.position = pop_up_position
+
