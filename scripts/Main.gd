@@ -98,13 +98,18 @@ func _ready():
 
 	_set_pop_up_window_position()
 	
+	# Menu Control Listeners
 	main_menu_control.pop_out_requested.connect(_pop_menu_into_external_window)
+	main_menu_control.program_quit_requested.connect(_on_quit_button_button_down)
+	main_menu_control.hide_menu_requested.connect(_menu_v2_hide)
 
 ### Process
 func _process(_delta):
 
+	# UI
 	var magnitude_avg = AudioManager.mag_throbber_value
 
+	# Scene reacting 
 	if magnitude_avg > AudioManager.threshold:
 		if !is_talking:
 			is_talking = true
@@ -282,7 +287,7 @@ func _on_popup_menu_index_pressed(index: int):
 
 
 func _on_v_slider_drag_ended(value_changed):
-	AudioManager.threshold=value_changed
+	AudioManager.set_threshold(value_changed)
 
 func _on_input_gain_change(_new_input_gain: float):
 	AudioManager.set_input_gain(_new_input_gain)
@@ -321,6 +326,20 @@ func _pop_menu_into_external_window():
 
 	main_menu_control.reparent(main_menu_control_window)
 	main_menu_control.position.x=0
+	main_menu_control_window.show()
+	_set_pop_up_window_position()
+
+func _menu_v2_hide():
+	if main_menu_control_window.visible:
+		main_menu_control_window.hide()
+		return
+
+	main_menu_control.hide()
+
+func _menu_v2_show():
+	main_menu_control.reparent(main_menu_control_window)
+	main_menu_control.position.x=0
+	main_menu_control.show()
 	main_menu_control_window.show()
 	_set_pop_up_window_position()
 	

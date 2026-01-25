@@ -34,14 +34,11 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="TitleEdit2" type="LineEdit" parent="MainMenu"]
+[node name="V2Label" type="Label" parent="MainMenu"]
 layout_mode = 2
 localize_numeral_system = false
-text = "NewMenuController"
-placeholder_text = "MAIN_PROFILE_PLACEHOLDER"
-alignment = 1
-caret_blink = true
-script = ExtResource("1_hl1yy")
+text = "MenuController_V2"
+horizontal_alignment = 1
 
 [node name="TitleEdit" type="LineEdit" parent="MainMenu"]
 unique_name_in_owner = true
@@ -51,12 +48,22 @@ alignment = 1
 caret_blink = true
 script = ExtResource("1_hl1yy")
 
-[node name="DeviceDropdown" type="MenuButton" parent="MainMenu"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="MainMenu"]
+layout_mode = 2
+
+[node name="InputDeviceLabel" type="Label" parent="MainMenu/HBoxContainer2"]
+layout_mode = 2
+text = "MAIN_INPUT_DEVICE_LABEL"
+horizontal_alignment = 1
+
+[node name="DeviceDropdown" type="MenuButton" parent="MainMenu/HBoxContainer2"]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 4
-text = "MAIN_INPUT_DEVICE_LABEL"
+size_flags_horizontal = 3
+text = "Default"
 flat = false
+alignment = 0
+text_overrun_behavior = 3
 item_count = 1
 popup/item_0/id = 0
 
@@ -66,13 +73,6 @@ layout_mode = 2
 size_flags_vertical = 2
 theme_override_constants/separation = 0
 alignment = 1
-
-[node name="Label" type="Label" parent="MainMenu/HBoxContainer"]
-layout_mode = 2
-tooltip_text = "MAIN_THRESHOLD_TOOLTIP"
-mouse_filter = 1
-theme = ExtResource("2_jjfu5")
-text = "MAIN_THRESHOLD_LABEL"
 
 [node name="VolumeVisual" type="ProgressBar" parent="MainMenu/HBoxContainer"]
 unique_name_in_owner = true
@@ -461,6 +461,13 @@ offset_right = 62.5
 offset_bottom = 62.5
 texture_normal = ExtResource("4_pk1al")
 
+[connection signal="text_submitted" from="MainMenu/TitleEdit" to="." method="_set_profile_name"]
+[connection signal="value_changed" from="MainMenu/HBoxContainer/ThresholdSlider" to="." method="_on_v_slider_drag_ended"]
+[connection signal="value_changed" from="MainMenu/HBoxContainer/InputGainSlider" to="." method="_on_input_gain_change"]
+[connection signal="pressed" from="MainMenu/Settings" to="." method="_open_settings"]
+[connection signal="pressed" from="MainMenu/CloseButton" to="." method="_hide_menu_pressed"]
 [connection signal="pressed" from="MainMenu/PopOutToggle" to="." method="_on_pop_out_toggle_pressed"]
+[connection signal="pressed" from="SettingsMenu/VBoxContainer2/TopMenuItems/Main Menu" to="." method="_close_settings"]
+[connection signal="pressed" from="SettingsMenu/VBoxContainer2/BottomMenuItems/QuitButton" to="." method="_on_quit_button_button_down"]
 [connection signal="button_down" from="Menu/Gizmo/Button" to="Menu/Gizmo" method="drag"]
 [connection signal="button_up" from="Menu/Gizmo/Button" to="Menu/Gizmo" method="dragnt"]

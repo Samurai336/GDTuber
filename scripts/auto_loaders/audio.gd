@@ -1,5 +1,8 @@
 extends Node
 
+#signals 
+signal audio_changed(input_device, threshold, input_gain)
+
 #Audio
 const MAX_SAMPLES = 20
 
@@ -54,19 +57,25 @@ func _process(_delta: float) -> void:
 func set_input_source(new_input_device) -> void:
     AudioServer.set_input_device(new_input_device)
     input_device = new_input_device
+    audio_changed.emit(input_device,threshold, input_gain)
 
 func get_audio_config() -> Array:
     return [input_device, threshold, input_gain]
 
-func set_audio_config(set_input_device, set_threshold, set_input_gain_value) -> void:
-    threshold = set_threshold
+func set_audio_config(set_input_device, set_threshold_value, set_input_gain_value) -> void:
+    set_threshold(set_threshold_value)
     set_input_gain(set_input_gain_value)
     set_input_source(set_input_device)
-    
+    # audio_changed.emit(input_device, threshold, input_gain)
+
+func set_threshold(new_threshold: float) -> void:
+    threshold=new_threshold
+    audio_changed.emit(input_device, threshold, input_gain)
 
 func set_input_gain(new_input_gain: float) -> void:
     _update_amplifier(new_input_gain)
     input_gain = new_input_gain
+    audio_changed.emit(input_device, threshold, input_gain)
 
 
 func _update_amplifier(new_input_gain: float):
